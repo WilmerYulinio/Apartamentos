@@ -1,0 +1,232 @@
+/* General */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #1a1a2e;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Barra de navegación superior */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #1f4068;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.navbar h1 {
+    font-size: 18px;
+    color: #ffffff;
+}
+
+.nav-btn {
+    background-color: #e94560;
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 0 5px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-btn:hover {
+    background-color: #ff6f91;
+}
+
+.logout-btn {
+    background-color: #c0392b;
+}
+
+.logout-btn:hover {
+    background-color: #e74c3c;
+}
+
+/* Contenedor principal */
+.main-container {
+    display: flex;
+    flex: 1;
+}
+
+/* Barra lateral izquierda */
+.sidebar {
+    width: 250px;
+    background-color: #162447;
+    padding: 20px;
+    position: fixed;
+    height: 100vh;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.admin-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.sidebar h2 {
+    font-size: 16px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Contenido principal */
+.content {
+    margin-left: 270px;
+    padding: 20px;
+    flex: 1;
+    overflow-y: auto;
+    background-color: #1a1a2e;
+}
+
+/* Secciones */
+.section {
+    display: none;
+}
+
+.client-list, .payment-list, .department-list {
+    margin-top: 20px;
+}
+
+.client-item, .payment-item, .department-item {
+    background-color: #0f3460;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.action-btn {
+    background-color: #03dac6;
+    border: none;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.action-btn:hover {
+    background-color: #02947a;
+}
+
+/* Contenedores de registro y login */
+.register-container, .login-container {
+    background-color: #0f3460;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    margin: auto;
+}
+
+.register-container h1, .login-container h1 {
+    font-size: 24px;
+    color: #e94560;
+    margin-bottom: 20px;
+}
+
+/* Grupos de formulario */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"], 
+.form-group input[type="password"], 
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #162447;
+    color: #ffffff;
+    outline: none;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Botones principales */
+.register-btn, .login-btn, .send-btn {
+    background-color: #e94560;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.register-btn:hover, .login-btn:hover {
+    background-color: #ff6f91;
+    box-shadow: 0 0 10px rgba(233, 69, 96, 0.8);
+}
+
+.send-btn {
+    background-color: #03dac6;
+}
+
+.send-btn:hover {
+    background-color: #02947a;
+}
+
+/* Mensajes Flash */
+.flashes {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.flashes li {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.flashes .success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.flashes .danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+.refresh-btn {
+    background-color: #4CAF50; /* Color de fondo */
+    color: white;              /* Color del texto */
+    padding: 10px 20px;        /* Espaciado interno */
+    margin: 10px 0;            /* Espaciado externo */
+    border: none;              /* Sin bordes */
+    cursor: pointer;           /* Cursor de mano al pasar por encima */
+    font-size: 16px;           /* Tamaño de fuente */
+}
+
+.refresh-btn:hover {
+    background-color: #45a049; /* Color al pasar el mouse por encima */
+}

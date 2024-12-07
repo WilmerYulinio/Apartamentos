@@ -1,0 +1,14 @@
+Apartamentos/
+├── app.py
+├── templates/
+│   ├── index.html
+│   ├── owner_register.html
+│   ├── owner_login.html
+│   ├── owner_dashboard.html
+│   ├── client_register.html
+│   ├── client_login.html
+│   ├── client_dashboard.html
+│   ├── view_apartments.html
+└── static/
+    ├── styles.css
+    └── uploads/

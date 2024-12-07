@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Cliente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Registro de Cliente</h1>
+    <form action="{{ url_for('clients.register') }}" method="post" enctype="multipart/form-data">
+        <!-- Campo oculto para el token CSRF -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        <div>
+            <input type="text" name="username" placeholder="Usuario" required>
+        </div>
+        <div>
+            <input type="password" name="password" placeholder="Contraseña" required>
+        </div>
+        <div>
+            <input type="text" name="access_code" placeholder="Código de Acceso" required>
+        </div>
+        <div>
+            <input type="file" name="photo" accept="image/*" required>
+        </div>
+        <div>
+            <button type="submit">Registrar</button>
+        </div>
+    </form>
+    <p>¿Ya tienes una cuenta? <a href="{{ url_for('clients.login') }}">Iniciar sesión</a></p>
+    <div class="navigation-buttons">
+        <button class="btn-back" onclick="history.back()">Retroceder</button>
+    </div>
+</body>
+</html>

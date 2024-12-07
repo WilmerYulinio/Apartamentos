@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='administracion/styles.css') }}">
+</head>
+<body>
+    <!-- Barra de navegación (superior) -->
+    <header class="navbar">
+        <h1>Panel de Administración</h1>
+        <button class="nav-btn" onclick="showSection('chat')">Chat Clientes</button>
+        <button class="nav-btn" onclick="showSection('historial')">Historial de Pagos</button>
+        <button class="nav-btn" onclick="showSection('gestionar')">Gestionar Departamentos</button>
+        <button class="nav-btn logout-btn" onclick="window.location.href='{{ url_for('administracion.logout') }}';">Cerrar Sesión</button>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <div class="main-container">
+        <!-- Barra lateral izquierda -->
+        <aside class="sidebar">
+            <img src="{{ url_for('static', filename='uploads/admins/' + (admin.photo if admin.photo else 'default.jpg')) }}" alt="Foto del Administrador" class="admin-photo">
+            <h2>{{ admin.username }}</h2>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="content">
+            <!-- Secciones -->
+            <!-- Chat con Clientes -->
+            <section id="chat">
+                <h2>Chat con Clientes</h2>
+                <!-- Formulario para seleccionar el modo de chat -->
+                <form method="GET" action="{{ url_for('administracion.dashboard') }}">
+                    <label for="chat_mode">Modo de chat:</label>
+                    <select name="chat_mode" id="chat_mode" onchange="this.form.submit()">
+                        <option value="general" {% if chat_mode == 'general' %}selected{% endif %}>Chat General</option>
+                        <option value="individual" {% if chat_mode == 'individual' %}selected{% endif %}>Chat Individual</option>
+                    </select>
+                    {% if chat_mode == 'individual' %}
+                        <label for="client_id">Seleccionar Cliente:</label>
+                        <select name="client_id" id="client_id" onchange="this.form.submit()">
+                            <option value="">-- Seleccione un Cliente --</option>
+                            {% for client in clients %}
+                                <option value="{{ client.id }}" {% if selected_client_id == client.id %}selected{% endif %}>
+                                    {{ client.username }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+                </form>
+
+                <!-- Mostrar el chat correspondiente -->
+                <div id="chat-box" class="chat-box">
+                    {% for message in chat_messages %}
+                        <div class="chat-message {{ 'admin' if message.sender_type == 'admin' else 'client' }}">
+                            <strong>{{ message.sender_username }}:</strong>
+                            <p>{{ message.content }}</p>
+                            {% if message.media %}
+                                {% if message.media.endswith(('png', 'jpg', 'jpeg', 'gif', 'heic', 'heif')) %}
+                                    <!-- Mostrar imagen -->
+                                    <img src="{{ url_for('static', filename='uploads/' + message.media) }}" alt="Archivo multimedia" class="media-preview">
+                                {% elif message.media.endswith(('mp4', 'mov', 'avi', 'ogg')) %}
+                                    <!-- Mostrar video -->
+                                    <video controls class="media-preview">
+                                        <source src="{{ url_for('static', filename='uploads/' + message.media) }}" type="video/mp4">
+                                        Tu navegador no soporta la reproducción de video.
+                                    </video>
+                                {% else %}
+                                    <!-- Enlace para otros tipos de archivos -->
+                                    <a href="{{ url_for('static', filename='uploads/' + message.media) }}" target="_blank">Descargar archivo</a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Formulario para enviar mensajes -->
+                <form id="message-form" method="POST" action="{{ url_for('administracion.send_message') }}" enctype="multipart/form-data" class="chat-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> <!-- Cambiar esto -->
+                    <input type="hidden" name="chat_mode" value="{{ chat_mode }}">
+                    {% if chat_mode == 'individual' %}
+                        <input type="hidden" name="client_id" value="{{ selected_client_id }}">
+                    {% endif %}
+                    <textarea name="content" id="messageInput" placeholder="Escribe un mensaje..."></textarea>
+                    <input type="file" name="media" accept="image/*,video/*">
+                    <button type="submit">Enviar</button>
+                </form>
+                <!-- Botón para refrescar la página -->
+                <button type="button" onclick="location.reload();" class="refresh-btn">Refrescar Chat</button>
+
+            </section>
+
+            
+            <!-- ... -->
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.content section');
+            sections.forEach(section => section.style.display = 'none');
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+        // Mostrar la sección de chat por defecto
+        showSection('chat');
+
+        // Inicializar socket.io
+        var socket = io();
+
+        socket.on('connect', function() {
+            socket.emit('join', {'admin_id': {{ admin.id }}});
+        });
+
+        // Enviar mensaje
+        document.getElementById('message-form').addEventListener('submit', function(e) {
+            // e.preventDefault(); // Comentamos esta línea para permitir el envío tradicional del formulario
+
+            // Si deseas usar AJAX para enviar el formulario sin recargar la página, descomenta el bloque siguiente
+            /*
+            e.preventDefault(); // Mantén esta línea si usas AJAX
+
+            const content = document.getElementById('messageInput').value.trim();
+            const mediaInput = document.querySelector('input[name="media"]');
+            const mediaFile = mediaInput.files[0];
+            const chatMode = '{{ chat_mode }}';
+            const selectedClientId = '{{ selected_client_id }}';
+
+            const formData = new FormData();
+            formData.append('content', content);
+            if (mediaFile) {
+                formData.append('media', mediaFile);
+            }
+            formData.append('chat_mode', chatMode);
+            if (selectedClientId) {
+                formData.append('client_id', selectedClientId);
+            }
+
+            // Obtener el token CSRF desde el formulario
+            const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+            formData.append('csrf_token', csrfToken);
+
+            fetch('{{ url_for('administracion.send_message') }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Mensaje enviado correctamente
+                    document.getElementById('messageInput').value = '';
+                    mediaInput.value = '';
+                    // Puedes mostrar un mensaje de éxito usando flash en el servidor
+                } else {
+                    // Manejar errores
+                    alert('Error al enviar el mensaje.');
+                }
+            })
+            .catch(err => {
+                console.error('Error:', err);
+                alert('Error al enviar el mensaje.');
+            });
+            */
+        });
+
+        // Recibir mensajes en tiempo real
+        socket.on('receive_message', function(data) {
+            const chatBox = document.getElementById('chat-box');
+
+            const chatMode = '{{ chat_mode }}';
+            const selectedClientId = '{{ selected_client_id }}' || null;
+
+            if (chatMode === 'general' && data.receiver_id === null) {
+                // Mostrar mensaje en el chat general
+                appendMessage(data);
+            } else if (chatMode === 'individual' && data.sender_id == selectedClientId) {
+                // Mostrar mensaje en el chat individual con el cliente seleccionado
+                appendMessage(data);
+            } else if (chatMode === 'individual' && data.sender_type === 'admin' && data.receiver_id == selectedClientId) {
+                // Mostrar mensaje enviado por el administrador en el chat individual
+                appendMessage(data);
+            }
+        });
+
+        function appendMessage(data) {
+            const chatBox = document.getElementById('chat-box');
+            let mediaContent = '';
+            if (data.media) {
+                const mediaUrl = '/static/uploads/' + data.media;
+                if (data.media.match(/\.(jpeg|jpg|gif|png|heic|heif)$/i)) {
+                    mediaContent = `<img src="${mediaUrl}" alt="Media" class="media-preview">`;
+                } else if (data.media.match(/\.(mp4|mov|avi|ogg)$/i)) {
+                    mediaContent = `<video controls class="media-preview">
+                                        <source src="${mediaUrl}" type="video/mp4">
+                                        Tu navegador no soporta la reproducción de video.
+                                    </video>`;
+                }
+            }
+
+            chatBox.innerHTML += `
+                <div class="chat-message ${data.sender_type}">
+                    <strong>${data.sender_username}:</strong>
+                    <p>${data.content || ''}</p>
+                    ${mediaContent}
+                </div>`;
+        }
+
+        // Función para enviar comando (por si la usas en gestionar departamentos)
+        function sendOpenCommand(apartmentCode) {
+            // Implementa la lógica para enviar el comando al servidor
+        }
+    </script>
+</body>
+</html>

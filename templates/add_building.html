@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Edificio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Agregar Edificio</h1>
+    <form action="{{ url_for('main.add_building') }}" method="post" enctype="multipart/form-data">
+        <!-- Campo oculto para el token CSRF -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        <input type="text" name="name" placeholder="Nombre del Edificio" required><br>
+        <input type="text" name="address" placeholder="Dirección"><br>
+        <input type="text" name="city" placeholder="Ciudad"><br>
+        <input type="text" name="country" placeholder="País"><br>
+        <input type="file" name="photo" accept="image/*" required><br>
+        <button type="submit">Agregar Edificio</button>
+    </form>
+    
+    <!-- Botones de navegación -->
+    <div class="navigation-buttons">
+        <button onclick="history.back()">Retroceder</button> <!-- Retrocede a la página anterior -->
+        <a href="{{ url_for('main.index') }}">
+            <button type="button">Volver al Inicio</button> <!-- Vuelve a la página principal -->
+        </a>
+    </div>
+</body>
+</html>

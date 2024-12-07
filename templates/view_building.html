@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ building.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>{{ building.name }}</h1>
+    <div class="building-info">
+        <img src="{{ url_for('static', filename='uploads/' + building.photo) }}" alt="{{ building.name }}" width="200">
+        <p><strong>Dirección:</strong> {{ building.address }}</p>
+        <p><strong>Ciudad:</strong> {{ building.city }}</p>
+        <p><strong>País:</strong> {{ building.country }}</p>
+    </div>
+
+    <h2>Pisos</h2>
+    <ul>
+        {% for floor in floors %}
+            <li>
+                <a href="{{ url_for('main.view_floor', floor_id=floor.id) }}">{{ floor.name }}</a>
+                <form action="{{ url_for('main.delete_floor', floor_id=floor.id) }}" method="post" style="display:inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar este piso y todos sus apartamentos?');">Eliminar</button>
+                </form>
+            </li>
+        {% else %}
+            <li>No hay pisos agregados aún.</li>
+        {% endfor %}
+    </ul>
+
+    <div class="add-floor">
+        <form action="{{ url_for('main.add_floor', building_id=building.id) }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-success">Agregar Piso</button>
+        </form>
+    </div>
+    <div class="navigation-buttons">
+        <a href="{{ url_for('main.index') }}">
+            <button class="btn btn-primary">Volver al Inicio</button>
+        </a>
+        <a href="javascript:history.back()">
+            <button class="btn btn-secondary">Retroceder</button>
+        </a>
+    </div>
+
+    <!-- ... -->
+</body>
+</html>

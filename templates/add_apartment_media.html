@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Media al Departamento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Agregar Fotos/Videos al Departamento</h1>
+    <form action="{{ url_for('main.add_apartment_media', apartment_id=apartment.id) }}" method="post" enctype="multipart/form-data">
+        <!-- Campo oculto para el token CSRF -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        <label for="media">Subir Imágenes/Videos:</label><br>
+        <input type="file" name="media" id="media" accept="image/*,video/*" multiple required><br><br>
+        
+        <label for="media_descriptions">Descripciones de Archivos:</label><br>
+        <textarea name="media_descriptions" id="media_descriptions" placeholder="Escribe las descripciones de cada archivo, separadas por comas" required></textarea><br><br>
+        
+        <button type="submit">Agregar Media</button>
+    </form>
+    
+    <!-- Botones de navegación (opcional) -->
+    <div class="navigation-buttons">
+        <button onclick="history.back()">Retroceder</button>
+        <a href="{{ url_for('main.view_apartment', apartment_id=apartment.id) }}">
+            <button type="button">Volver al Departamento</button>
+        </a>
+    </div>
+</body>
+</html>

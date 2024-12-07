@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Piso</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Agregar Piso</h1>
+    <form action="{{ url_for('main.add_floor', building_id=building.id) }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <!-- Eliminado el campo de entrada para el nombre del piso -->
+        <button type="submit">Agregar Piso</button>
+    </form>
+    
+    <!-- Botones de navegación (opcional) -->
+    <div class="navigation-buttons">
+        <button onclick="history.back()">Retroceder</button>
+        <a href="{{ url_for('main.owner_dashboard') }}">
+            <button type="button">Volver al Dashboard</button>
+        </a>
+    </div>
+</body>
+</html>
+

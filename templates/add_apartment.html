@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Departamento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Agregar Departamento</h1>
+    <form action="{{ url_for('main.add_apartment', floor_id=floor.id) }}" method="post" enctype="multipart/form-data">
+        <!-- Campo oculto para el token CSRF -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
+        <label for="size">Tamaño:</label><br>
+        <input type="text" name="size" id="size" placeholder="Tamaño" required><br><br>
+    
+        <label for="description">Descripción General:</label><br>
+        <textarea name="description" id="description" placeholder="Descripción General" required></textarea><br><br>
+    
+        <label for="price">Precio:</label><br>
+        <input type="number" step="0.01" name="price" id="price" placeholder="Precio" required><br><br>
+    
+        <label for="media">Subir Imágenes/Videos:</label><br>
+        <input type="file" name="media[]" id="media" multiple accept="image/*,video/*"><br><br>
+    
+        <label for="media_descriptions">Descripciones de Archivos:</label><br>
+        <textarea name="media_descriptions" id="media_descriptions" placeholder="Escribe las descripciones de cada archivo, separadas por comas"></textarea><br><br>
+    
+        <button type="submit">Agregar Departamento</button>
+    </form>
+    
+</body>
+</html>

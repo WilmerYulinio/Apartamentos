@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departamento {{ apartment.id }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Departamento {{ apartment.id }}</h1>
+    <div class="apartment-info">
+        <h1>Departamento {{ apartment.id }}</h1>
+        <p><strong>Tamaño:</strong> {{ apartment.size }}</p>
+        <p><strong>Descripción General:</strong> {{ apartment.description }}</p>
+        <p><strong>Precio:</strong> ${{ apartment.price }}</p>
+        <p><strong>Código:</strong> {{ apartment.code or "Sin código" }}</p>
+    </div>
+    
+    <h2>Imágenes y Videos</h2>
+    <div class="media-container">
+        {% if media %}
+            <ul class="media-list">
+                {% for m in media %}
+                    <li class="media-item">
+                        {% if m.media_type == 'image' %}
+                            <img src="{{ url_for('static', filename='uploads/' + m.filename) }}" alt="{{ m.description }}">
+                        {% elif m.media_type == 'video' %}
+                            <video controls>
+                                <source src="{{ url_for('static', filename='uploads/' + m.filename) }}" type="video/mp4">
+                                Tu navegador no soporta este formato de video.
+                            </video>
+                        {% endif %}
+                        <p>{{ m.description }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No hay imágenes o videos asociados con este departamento.</p>
+        {% endif %}
+    </div>
+    <a href="{{ url_for('main.add_apartment_media', apartment_id=apartment.id) }}"><button class="btn btn-primary">Agregar Media</button></a>
+    <div class="navigation-buttons">
+        <a href="{{ url_for('main.index') }}">
+            <button class="btn btn-primary">Volver al Inicio</button>
+        </a>
+        <a href="javascript:history.back()">
+            <button class="btn btn-secondary">Retroceder</button>
+        </a>
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <!-- Barra de navegación fija -->
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('main.index') }}">Inicio</a></li>
+            <li><a href="{{ url_for('main.add_building') }}">Agregar Edificio</a></li>
+            <li><a href="{{ url_for('main.logout') }}">Cerrar Sesión</a></li>
+        </ul>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Barra lateral (Sidebar) -->
+        <div class="sidebar">
+            <img src="{{ url_for('static', filename='uploads/' + (owner.photo if owner.photo else 'default.jpg')) }}" alt="Foto de Perfil" class="profile-pic">
+            <h2>{{ owner.username }}</h2>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="main-content">
+            <h1 class="titles">Tus Edificios</h1>
+            <div class="button-container">
+                {% for building in buildings %}
+                    <div class="card">
+                        <h2>{{ building.name }}</h2>
+                        <p>{{ building.city }}, {{ building.country }}</p>
+                        <a href="{{ url_for('main.view_building', building_id=building.id) }}" class="link">Ver Detalles</a>
+                        <form action="{{ url_for('main.delete_building', building_id=building.id) }}" method="post">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar este edificio y todo lo relacionado?');">Eliminar</button>
+                        </form>
+                        
+                    </div>
+                {% else %}
+                    <p>No hay edificios agregados aún.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ver Apartamentos</title>
+</head>
+<body>
+    <h1>Lista de Apartamentos</h1>
+    <ul>
+        {% for apartment in apartments %}
+        <li>
+            Apartamento ID: {{ apartment.id }} - Tamaño: {{ apartment.size }} - Precio: ${{ apartment.price }}
+            <a href="{{ url_for('main.view_apartment', apartment_id=apartment.id) }}">Ver Detalles</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

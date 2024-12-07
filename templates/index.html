@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenido a Automatización de Apartamentos</h1>
+        <div class="button-container">
+            <a href="{{ url_for('main.view_apartments') }}" class="button">Ver Apartamentos</a>
+            <a href="{{ url_for('main.owner_register') }}" class="button">Soy Dueño</a>
+            <a href="{{ url_for('clients.register') }}" class="button">Soy Cliente</a>
+            <a href="{{ url_for('administracion.register') }}" class="button">Soy Administrador</a>
+        </div>
+    </div>
+</body>
+</html>

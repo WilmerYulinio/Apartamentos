@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio de Sesión</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Inicio de Sesión</h1>
+    <form method="POST" action="{{ url_for('clients.login') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="text" name="username" placeholder="Usuario" required>
+        <input type="password" name="password" placeholder="Contraseña" required>
+        <button type="submit">Iniciar Sesión</button>
+    </form>
+    
+    <p>¿No tienes una cuenta? <a href="{{ url_for('clients.register') }}">Regístrate aquí</a></p>
+    <div class="navigation-buttons">
+        <button class="btn-back" onclick="history.back()">Retroceder</button>
+    </div>
+</body>
+</html>

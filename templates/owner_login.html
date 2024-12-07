@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio de Sesión - Dueño</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <!-- Mostrar mensajes flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="login-container">
+        <h1 class="login-title">Inicio de Sesión - Dueño</h1>
+
+        <!-- Formulario -->
+        <form action="{{ url_for('main.owner_login') }}" method="post">
+            <!-- Incluir el token CSRF como campo oculto -->
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input class="input-field" type="text" name="username" placeholder="Usuario" required>
+            <input class="input-field" type="password" name="password" placeholder="Contraseña" required>
+            <button class="submit-button" type="submit">Iniciar Sesión</button>
+        </form>
+
+        <!-- Enlace para registrar una cuenta -->
+        <div class="register-link">
+            <p>¿No tienes una cuenta? <a href="{{ url_for('main.owner_register') }}">Regístrate aquí</a></p>
+        </div>
+    </div>
+
+    <div class="navigation-buttons">
+        <button class="btn-back" onclick="history.back()">Retroceder</button>
+    </div>
+</body>
+</html>

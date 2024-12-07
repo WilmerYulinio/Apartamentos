@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ floor.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>{{ floor.name }}</h1>
+    <h2>Departamentos</h2>
+    <ul>
+        {% for apartment in apartments %}
+            <li>
+                <a href="{{ url_for('main.view_apartment', apartment_id=apartment.id) }}">Departamento {{ apartment.id }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('main.add_apartment', floor_id=floor.id) }}"><button>Agregar Departamento</button></a>
+    <div class="navigation-buttons">
+        <a href="{{ url_for('main.index') }}">
+            <button class="btn btn-primary">Volver al Inicio</button>
+        </a>
+        <a href="javascript:history.back()">
+            <button class="btn btn-secondary">Retroceder</button>
+        </a>
+    </div>
+    
+</body>
+</html>
