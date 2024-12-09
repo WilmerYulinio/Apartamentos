@@ -20,7 +20,8 @@ def create_app():
         'sqlite:///apartamentos.db'  # Base de datos SQLite por defecto si no se encuentra DATABASE_URL
     )
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.secret_key = os.environ.get('62aa283ac8862da4fa6a2bc7fdba7d83b5a577818c568abb')
+    app.secret_key = os.environ.get('SECRET_KEY', 'una_clave_secreta_muy_segura_y_unica')
+
     app.config['WTF_CSRF_HEADERS'] = ['X-CSRFToken']
     app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
