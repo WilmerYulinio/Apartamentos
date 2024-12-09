@@ -12,7 +12,12 @@ def create_app():
     app = Flask(__name__)
 
     # Configuración de la aplicación
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///apartamentos.db').replace("postgres://", "postgresql://")
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+        'DATABASE_URL',
+        'sqlite:///apartamentos.db'
+    )
+
+
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = 'una_clave_secreta_muy_segura_y_unica'
     app.config['WTF_CSRF_HEADERS'] = ['X-CSRFToken'] 
