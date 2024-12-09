@@ -7,6 +7,7 @@ from administracion.routes import admin_bp
 from main_routes import register_routes
 from flask_wtf.csrf import generate_csrf
 from main_routes import main_bp
+from dotenv import load_dotenv
 def create_app():
     app = Flask(__name__)
 
@@ -23,7 +24,8 @@ def create_app():
     migrate.init_app(app, db)
     socketio.init_app(app, cors_allowed_origins=os.environ.get('CORS_ALLOWED_ORIGINS', '*'), manage_session=False)
     csrf.init_app(app)
-
+    load_dotenv()
+    
     # Registrar rutas
     app.register_blueprint(main_bp)
     app.register_blueprint(client_bp, url_prefix='/clients')
