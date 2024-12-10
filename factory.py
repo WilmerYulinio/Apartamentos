@@ -8,7 +8,7 @@ from administracion.routes import admin_bp
 from main_routes import main_bp
 from flask_wtf.csrf import generate_csrf
 from dotenv import load_dotenv
-
+from api.routes import api_bp
 
 def create_app():
     app = Flask(__name__)
@@ -36,7 +36,7 @@ def create_app():
     app.register_blueprint(main_bp)
     app.register_blueprint(client_bp, url_prefix='/clients')
     app.register_blueprint(admin_bp, url_prefix='/administracion')
-
+    app.register_blueprint(api_bp, url_prefix='/api')
     # Función para generar el token CSRF
     def generate_csrf_token():
         return csrf.generate_csrf()
