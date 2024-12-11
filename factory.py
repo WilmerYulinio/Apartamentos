@@ -8,16 +8,16 @@ from main_routes import main_bp
 from flask_wtf.csrf import generate_csrf
 from dotenv import load_dotenv
 import os
+import pymysql
+pymysql.install_as_MySQLdb()
 
 def create_app():
     app = Flask(__name__)
     load_dotenv()
 
     # Configuración de la aplicación
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-        'DATABASE_URL',
-        'sqlite:///apartamentos.db'
-    )
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('MYSQL_URL')
+    print(os.getenv("MYSQL_URL")) 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = os.environ.get('SECRET_KEY', 'una_clave_secreta_muy_segura_y_unica')
     app.config['WTF_CSRF_HEADERS'] = ['X-CSRFToken']
