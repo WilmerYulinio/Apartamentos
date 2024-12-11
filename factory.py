@@ -1,13 +1,13 @@
-# factory.py
 from flask import Flask
 from extensions import db, socketio, csrf
-from flask_migrate import Migrate
+from flask_migrate import Migrate, upgrade
 from clients.routes import client_bp
 from administracion.routes import admin_bp
 from main_routes import main_bp
 from flask_wtf.csrf import generate_csrf
 from dotenv import load_dotenv
 import os
+from flask import Blueprint
 
 def create_app():
     app = Flask(__name__)
@@ -41,7 +41,22 @@ def create_app():
 
     app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
+    # Registrar el blueprint temporal para migraciones
+    app.register_blueprint(migrate_bp, url_prefix='/migrate')
+
     return app
+
+# Blueprint temporal para migraciones
+migrate_bp = Blueprint('migrate', __name__)
+
+@migrate_bp.route('/run', methods=['GET'])
+def run_migrations():
+    try:
+        with app.app_context():
+            upgrade()  # Ejecuta flask db upgrade
+        return "Migraciones aplicadas exitosamente", 200
+    except Exception as e:
+        return f"Error al aplicar migraciones: {str(e)}", 500
 
 # Asegúrate de que este objeto esté disponible para Gunicorn
 app = create_app()
