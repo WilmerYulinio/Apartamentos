@@ -41,16 +41,17 @@ def create_app():
 
     app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
-    # # Endpoint temporal para aplicar migraciones
-    # @csrf.exempt
-    # @app.route('/migrate/run', methods=['POST'])
-    # def run_migrations():
-    #     """Endpoint temporal para ejecutar migraciones en el servidor."""
-    #     try:
-    #         upgrade()
-    #         return "Migraciones aplicadas exitosamente", 200
-    #     except Exception as e:
-    #         return f"Error al ejecutar migraciones: {str(e)}", 500
+    # Endpoint temporal para aplicar migraciones
+    @csrf.exempt
+    @app.route('/migrate/run', methods=['POST'])
+    def run_migrations():
+        """Endpoint temporal para ejecutar migraciones en el servidor."""
+        try:
+            upgrade()
+            return "Migraciones aplicadas exitosamente", 200
+        except Exception as e:
+            return f"Error al ejecutar migraciones: {str(e)}", 500
+
 
     return app
 
