@@ -220,32 +220,7 @@ def view_apartments():
     apartments = Apartment.query.all()
     return render_template('view_apartments.html', apartments=apartments)
 
-@main_bp.route('/client/register', methods=['GET', 'POST'])
-def client_register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        access_code = request.form['access_code']
-        if 'photo' not in request.files:
-            flash('No se encontró el archivo')
-            return redirect(request.url)
-        file = request.files['photo']
-        if file.filename == '':
-            flash('No se seleccionó ningún archivo')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
-            new_client = Client(username=username, password=password, access_code=access_code, photo=filename)
-            db.session.add(new_client)
-            db.session.commit()
-            flash('Cliente registrado exitosamente.')
-            return redirect(url_for('main.index'))
-        else:
-            flash('Tipo de archivo no permitido')
-            return redirect(request.url)
-    return render_template('client_register.html')
+
 
 @main_bp.route('/owner/floor/<int:floor_id>/delete', methods=['POST'])
 def delete_floor(floor_id):
