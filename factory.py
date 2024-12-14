@@ -8,6 +8,8 @@ from flask_wtf.csrf import generate_csrf
 from flask_migrate import upgrade
 import os
 import pymysql
+from dotenv import load_dotenv
+
 
 pymysql.install_as_MySQLdb()
 
