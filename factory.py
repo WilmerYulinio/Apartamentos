@@ -1,12 +1,11 @@
 from flask import Flask
 from extensions import db, socketio, csrf
-from flask_migrate import Migrate
+from flask_migrate import Migrate, upgrade
 from clients.routes import client_bp
 from administracion.routes import admin_bp
 from main_routes import main_bp
 from flask_wtf.csrf import generate_csrf
 from dotenv import load_dotenv
-from flask_migrate import upgrade
 import os
 import pymysql
 
@@ -42,12 +41,12 @@ def create_app():
 
     app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
-    # Registro del endpoint temporal
+    # Endpoint temporal para aplicar migraciones
     @app.route('/migrate/run', methods=['POST'])
     def run_migrations():
         """Endpoint temporal para ejecutar migraciones en el servidor."""
         try:
-            upgrade()
+            upgrade()  # Ejecuta las migraciones pendientes
             return "Migraciones aplicadas exitosamente", 200
         except Exception as e:
             return f"Error al ejecutar migraciones: {str(e)}", 500
