@@ -8,6 +8,7 @@ from flask_socketio import emit, join_room
 from datetime import datetime
 from models import PaymentProof
 from utils import allowed_file
+from sqlalchemy.exc import IntegrityError
 
 
 
@@ -25,25 +26,44 @@ def register():
         access_code = request.form['access_code']
         photo = request.files.get('photo')
 
+        # Verificar si el código de acceso existe en la tabla 'apartments'
         apartment = Apartment.query.filter_by(code=access_code).first()
         if not apartment:
-            flash('Código inválido.', 'danger')
+            flash('El código de acceso no existe. Verifique nuevamente.', 'danger')
             return redirect(url_for('clients.register'))
 
+        # Verificar si ya existe un cliente con ese código de acceso
+        existing_client = Client.query.filter_by(access_code=access_code).first()
+        if existing_client:
+            flash('El código de acceso ya ha sido utilizado.', 'danger')
+            return redirect(url_for('clients.register'))
+
+        # Subir la foto si existe
         filename = None
         if photo and allowed_file(photo.filename):
             filename = secure_filename(photo.filename)
-            photo.save(os.path.join(UPLOAD_FOLDER, filename))
+            photo.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
 
+        # Crear cliente
         hashed_password = generate_password_hash(password)
-        new_client = Client(username=username, password=hashed_password,
-                            access_code=access_code, photo=filename,
-                            apartment_id=apartment.id)
+        new_client = Client(
+            username=username,
+            password=hashed_password,
+            access_code=access_code,
+            photo=filename,
+            apartment_id=apartment.id  # Asociar cliente con el apartamento
+        )
         db.session.add(new_client)
-        db.session.commit()
 
-        flash('Registro exitoso.', 'success')
-        return redirect(url_for('clients.login'))
+        try:
+            db.session.commit()
+            flash('Registro exitoso.', 'success')
+            return redirect(url_for('clients.login'))
+        except IntegrityError:
+            db.session.rollback()
+            flash('Error al registrar el cliente. Intente nuevamente.', 'danger')
+            return redirect(url_for('clients.register'))
+
     return render_template('clients/register.html')
 
 @client_bp.route('/login', methods=['GET', 'POST'])
