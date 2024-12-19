@@ -16,7 +16,7 @@ def create_app():
     load_dotenv()
 
     # Configuración de la aplicación
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('MYSQL_URL')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
     print(os.getenv("MYSQL_URL"))
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = os.environ.get('SECRET_KEY', 'una_clave_secreta_muy_segura_y_unica')
