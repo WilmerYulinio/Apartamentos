@@ -16,8 +16,7 @@ def create_app():
     load_dotenv()
 
     # Configuración de la aplicación
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
-    print(os.getenv("MYSQL_URL"))
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('MYSQL_URL')  # Usar MYSQL_URL
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.secret_key = os.environ.get('SECRET_KEY', 'una_clave_secreta_muy_segura_y_unica')
     app.config['WTF_CSRF_HEADERS'] = ['X-CSRFToken']
@@ -41,17 +40,25 @@ def create_app():
 
     app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
-    # Endpoint temporal para aplicar migraciones
-    # @csrf.exempt
-    # @app.route('/migrate/run', methods=['POST'])
-    # def run_migrations():
-    #     """Endpoint temporal para ejecutar migraciones en el servidor."""
-    #     try:
-    #         upgrade()
-    #         return "Migraciones aplicadas exitosamente", 200
-    #     except Exception as e:
-    #         return f"Error al ejecutar migraciones: {str(e)}", 500
+    @csrf.exempt
+    @app.route('/migrate/run', methods=['POST'])
+    def run_migrations():
+        """Endpoint temporal para ejecutar migraciones en el servidor."""
+        try:
+            upgrade()
+            return "Migraciones aplicadas exitosamente", 200
+        except Exception as e:
+            return f"Error al ejecutar migraciones: {str(e)}", 500
 
+    @csrf.exempt
+    @app.route('/migrate/run', methods=['POST'])
+    def run_migrations():
+        """Endpoint temporal para ejecutar migraciones en el servidor."""
+        try:
+            upgrade()
+            return "Migraciones aplicadas exitosamente", 200
+        except Exception as e:
+            return f"Error al ejecutar migraciones: {str(e)}", 500
 
     return app
 
